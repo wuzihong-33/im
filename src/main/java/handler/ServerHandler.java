@@ -4,10 +4,7 @@ import coder.PacketCodeC;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import protocol.LoginRequestPacket;
-import protocol.LoginResponsePacket;
-import protocol.MessageRequestPacket;
-import protocol.Packet;
+import protocol.*;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
@@ -32,6 +29,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             ctx.channel().writeAndFlush(responseByteBuf);
         } else if (packet instanceof MessageRequestPacket) {
             // 处理消息逻辑
+            MessageRequestPacket messageRequestPacket = (MessageRequestPacket) packet;
+            System.out.println("server receive client msg: " + messageRequestPacket.getMsg());
+            MessageResponsePacket messageResponsePacket = new MessageResponsePacket();
+            messageResponsePacket.setMsg("server message response");
         }
 
     }

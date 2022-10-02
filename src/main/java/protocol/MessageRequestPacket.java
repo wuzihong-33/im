@@ -1,5 +1,7 @@
 package protocol;
 
+import marks.Command;
+
 public class MessageRequestPacket extends Packet {
     private String msg;
 

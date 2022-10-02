@@ -3,10 +3,8 @@ package coder;
 import Serializer.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import protocol.Command;
-import protocol.LoginRequestPacket;
-import protocol.LoginResponsePacket;
-import protocol.Packet;
+import marks.Command;
+import protocol.*;
 
 public class PacketCodeC {
     public static PacketCodeC INSTANCE = new PacketCodeC();
@@ -58,11 +56,15 @@ public class PacketCodeC {
             return LoginRequestPacket.class;
         } else if (command == Command.LOGIN_RESPONSE) {
             return LoginResponsePacket.class;
+        } else if (command == Command.MESSAGE_REQUEST) {
+            return MessageRequestPacket.class;
+        } else if (command == Command.MESSAGE_RESPONSE) {
+            return MessageResponsePacket.class;
         }
         return LoginRequestPacket.class;
     }
     private Serializer getSerializerAlgorithm(byte serializerAlgorithm) {
-//        if (command == protocol.protocol.Command.LOGIN_REQUEST) {
+//        if (command == protocol.marks.Command.LOGIN_REQUEST) {
 //            return protocol.protocol.LoginRequestPacket.class;
 //        }
         return Serializer.DEFAULT;

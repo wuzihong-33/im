@@ -1,4 +1,4 @@
-package protocol;
+package marks;
 
 public interface Command {
     Byte LOGIN_REQUEST = 1;
