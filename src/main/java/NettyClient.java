@@ -1,3 +1,4 @@
+import handler.ClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -37,7 +38,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
-//                        channel.pipeline().addLast(new FirstClientHandler());
+//                        channel.pipeline().addLast(new handler.FirstClientHandler());
                         channel.pipeline().addLast(new ClientHandler());
                     }
                 });

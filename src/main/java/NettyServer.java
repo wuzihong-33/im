@@ -1,3 +1,4 @@
+import handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -32,7 +33,7 @@ public class NettyServer {
                 .channel(NioServerSocketChannel.class)   // 指定io模型
                 .childHandler(new ChannelInitializer<NioSocketChannel>() { // 初始化通道
                     protected void initChannel(NioSocketChannel channel) throws Exception {
-//                        channel.pipeline().addLast(new FirstServerHandler());
+//                        channel.pipeline().addLast(new handler.FirstServerHandler());
                         channel.pipeline().addLast(new ServerHandler());
 
                     }
