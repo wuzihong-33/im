@@ -5,12 +5,12 @@ import marks.Command;
 public class MessageRequestPacket extends Packet {
     private String msg;
 
-    public String getMsg() {
-        return msg;
+    public MessageRequestPacket(String msg) {
+        this.msg = msg;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public String getMsg() {
+        return msg;
     }
 
     @Override

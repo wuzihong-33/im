@@ -1,0 +1,38 @@
+<html>
+<head>
+
+
+
+</head>
+
+<body>
+</body>
+
+
+</html>
+
+
+<script type="text/javascript">
+    var socket;
+    if (window.WebSocket) {
+        window.WebSocket = window.MozWebSocket;
+    }
+    if (window.WebSocket) {
+        let domain = window.location.host;
+        let url = "ws://" + domain + "/ws";
+        socket = new WebSocket(url, "echo");
+        socket.onmessage = function(event) {
+
+        }
+    } else {
+        alert("Your browser does not support Web Socket.");
+    }
+    function send(message) {
+        
+    }
+    
+
+</script>
+    
+
+

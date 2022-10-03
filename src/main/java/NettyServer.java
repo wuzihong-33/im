@@ -7,6 +7,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -20,6 +22,8 @@ public class NettyServer {
                 .channel(NioServerSocketChannel.class)   // 指定io模型
                 .childHandler(new ChannelInitializer<NioSocketChannel>() { // 初始化通道
                     protected void initChannel(NioSocketChannel channel) throws Exception {
+//                        channel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        channel.pipeline().addLast(new Spliter(Integer.MAX_VALUE, 7, 4));
                         channel.pipeline().addLast(new EchoHandler());
 //                        channel.pipeline().addLast(new handler.FirstServerHandler());
 //                        channel.pipeline().addLast(new ServerHandler());

@@ -12,7 +12,7 @@ import protocol.*;
  */
 public class PacketCodeC {
     public static PacketCodeC INSTANCE = new PacketCodeC();
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
     private PacketCodeC(){
     }
     public ByteBuf encode(Packet packet) {
@@ -23,7 +23,7 @@ public class PacketCodeC {
 
         // 协议：
         // 魔数 - 版本号 - 序列化方式 - 指令 - 长度 - 内容
-        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeInt(0x123456);
         byteBuf.writeByte(packet.getVersion());
         byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
         byteBuf.writeByte(packet.getCommand());
