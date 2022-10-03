@@ -1,4 +1,6 @@
-import handler.ServerHandler;
+import coder.PacketDecoder;
+import coder.PacketEncoder;
+import handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -34,8 +36,12 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() { // 初始化通道
                     protected void initChannel(NioSocketChannel channel) throws Exception {
 //                        channel.pipeline().addLast(new handler.FirstServerHandler());
-                        channel.pipeline().addLast(new ServerHandler());
-
+//                        channel.pipeline().addLast(new ServerHandler());
+                        // 下列都是inbound，处理顺序和addLast顺序一致
+                        channel.pipeline().addLast(new PacketDecoder());
+                        channel.pipeline().addLast(new LoginRequestHandler());
+                        channel.pipeline().addLast(new MessageRequestHandler());
+                        channel.pipeline().addLast(new PacketEncoder());
                     }
                 });
 

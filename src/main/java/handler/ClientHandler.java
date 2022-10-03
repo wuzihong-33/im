@@ -20,24 +20,24 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ctx.channel().writeAndFlush(byteBuf);
     }
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        // 客户端处理响应
-        ByteBuf byteBuf = (ByteBuf)msg;
-        Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);
-        if (packet instanceof LoginResponsePacket) {
-            LoginResponsePacket loginResponsePacket = (LoginResponsePacket) packet;
-            if (loginResponsePacket.isSuccess()) {
-                // 在客户端登录成功之后，给客户端绑定登录成功的标志位。
-                LoginUtils.markAsLogin(ctx.channel());
-                System.out.println("client login success");
-            } else {
-                System.out.println("client login fail, reason: " + loginResponsePacket.getReason());
-            }
-        } else if (packet instanceof MessageResponsePacket){
-            // 处理消息逻辑
-            MessageResponsePacket messageResponsePacket = (MessageResponsePacket) packet;
-            System.out.println("client receive server msg: " + messageResponsePacket.getMsg());
-        }
-    }
+//    @Override
+//    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+//        // 客户端处理响应
+//        ByteBuf byteBuf = (ByteBuf)msg;
+//        Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);
+//        if (packet instanceof LoginResponsePacket) {
+//            LoginResponsePacket loginResponsePacket = (LoginResponsePacket) packet;
+//            if (loginResponsePacket.isSuccess()) {
+//                // 在客户端登录成功之后，给客户端绑定登录成功的标志位。
+//                LoginUtils.markAsLogin(ctx.channel());
+//                System.out.println("client login success");
+//            } else {
+//                System.out.println("client login fail, reason: " + loginResponsePacket.getReason());
+//            }
+//        } else if (packet instanceof MessageResponsePacket){
+//            // 处理消息逻辑
+//            MessageResponsePacket messageResponsePacket = (MessageResponsePacket) packet;
+//            System.out.println("client receive server msg: " + messageResponsePacket.getMsg());
+//        }
+//    }
 }

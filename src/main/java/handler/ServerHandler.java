@@ -11,11 +11,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf byteBuf = (ByteBuf)msg;
         Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);
-//        System.out.println("server: " + "收到协议信息：" + packet);
 
         if (packet instanceof LoginRequestPacket) {
             LoginRequestPacket loginRequestPacket = (LoginRequestPacket) packet;
-            LoginResponsePacket loginResponsePacket = new LoginResponsePacket();
+            LoginResponsePacket loginResponsePacket = LoginResponsePacket.success();
             loginResponsePacket.setVersion(packet.getVersion());
             // 处理登录逻辑：登录校验
             if (validLogin(loginRequestPacket)) {

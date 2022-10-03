@@ -6,6 +6,10 @@ import io.netty.buffer.ByteBufAllocator;
 import marks.Command;
 import protocol.*;
 
+/**
+ * 老版本
+ * encoder和decoder一体，未继承ByteToMessageDecoder和MessageToByteEncoder
+ */
 public class PacketCodeC {
     public static PacketCodeC INSTANCE = new PacketCodeC();
     private static final int MAGIC_NUMBER = 0x12345678;
@@ -27,6 +31,17 @@ public class PacketCodeC {
         byteBuf.writeBytes(bytes);
 
         return byteBuf;
+    }
+    public void encode(ByteBuf byteBuf, Packet packet) {
+        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+        // 协议：
+        // 魔数 - 版本号 - 序列化方式 - 指令 - 长度 - 内容
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
     }
     public Packet decode(ByteBuf byteBuf) {
         // 跳过魔数
