@@ -1,10 +1,7 @@
 import coder.PacketCodeC;
 import coder.PacketDecoder;
 import coder.PacketEncoder;
-import handler.ClientHandler;
-import handler.LoginRequestHandler;
-import handler.LoginResponseHandler;
-import handler.MessageResponseHandler;
+import handler.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -30,13 +27,14 @@ public class NettyClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
+                        channel.pipeline().addLast(new StickOrHalfPackageHandler());
 //                        channel.pipeline().addLast(new handler.FirstClientHandler());
-                        channel.pipeline().addLast(new ClientHandler());
+//                        channel.pipeline().addLast(new ClientHandler());
                         // 下列都是inbound，处理顺序和addLast顺序一致
-                        channel.pipeline().addLast(new PacketDecoder());
-                        channel.pipeline().addLast(new LoginResponseHandler());
-                        channel.pipeline().addLast(new MessageResponseHandler());
-                        channel.pipeline().addLast(new PacketEncoder());
+//                        channel.pipeline().addLast(new PacketDecoder());
+//                        channel.pipeline().addLast(new LoginResponseHandler());
+//                        channel.pipeline().addLast(new MessageResponseHandler());
+//                        channel.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, "localhost", 8080, MAX_RETRY);

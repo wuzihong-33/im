@@ -16,8 +16,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("client try login");
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket(UUID.randomUUID().toString(), "flash", "pwd");
 
-        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(loginRequestPacket);
-        ctx.channel().writeAndFlush(byteBuf);
+//        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(loginRequestPacket);
+        ctx.channel().writeAndFlush(loginRequestPacket);
     }
 
 //    @Override
