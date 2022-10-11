@@ -9,7 +9,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import protocol.MessageRequestPacket;
 import utils.LoginUtils;
 
@@ -29,14 +28,14 @@ public class NettyClient {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
 //                        channel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
-                        channel.pipeline().addLast(new StickOrHalfPackageHandler());
+//                        channel.pipeline().addLast(new StickOrHalfPackageHandler());
 //                        channel.pipeline().addLast(new handler.FirstClientHandler());
-//                        channel.pipeline().addLast(new ClientHandler());
+                        channel.pipeline().addLast(new AutoLoginHandler());
                         // 下列都是inbound，处理顺序和addLast顺序一致
-//                        channel.pipeline().addLast(new PacketDecoder());
-//                        channel.pipeline().addLast(new LoginResponseHandler());
-//                        channel.pipeline().addLast(new MessageResponseHandler());
-//                        channel.pipeline().addLast(new PacketEncoder());
+                        channel.pipeline().addLast(new PacketDecoder());
+                        channel.pipeline().addLast(new LoginResponseHandler());
+                        channel.pipeline().addLast(new MessageResponseHandler());
+                        channel.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, "localhost", 8080, MAX_RETRY);
@@ -61,6 +60,7 @@ public class NettyClient {
         }).start();
     }
 
+    // client在绑定完handler后，会去执行connect，连接成功后会去
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap
                 .connect(host, port)

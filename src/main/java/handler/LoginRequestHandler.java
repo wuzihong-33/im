@@ -6,7 +6,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.LoginRequestPacket;
 import protocol.LoginResponsePacket;
+import utils.LoginUtils;
 
+// 对LoginRequestPacket包的处理
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
     /**
      * 可以看到新老版本的比较：
@@ -23,6 +25,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (validLogin(loginRequestPacket)) {
             loginResponsePacket = LoginResponsePacket.success();
             loginResponsePacket.setVersion(loginRequestPacket.getVersion());
+            LoginUtils.markAsLogin(ctx.channel());
         } else {
             loginResponsePacket = LoginResponsePacket.fail("登录校验失败! ");
         }
