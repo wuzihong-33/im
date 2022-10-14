@@ -1,10 +1,10 @@
-import Constants.User;
-import coder.PacketCodeC;
 import coder.PacketDecoder;
 import coder.PacketEncoder;
+import entity.ConsoleCommand;
+import entity.ConsoleCommandManager;
+import exception.CommandNotFindException;
 import handler.*;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -13,9 +13,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import protocol.LoginRequestPacket;
 import protocol.MessageRequestPacket;
 import utils.LoginUtils;
+import utils.SessionUtils;
 
 import java.util.Date;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +35,7 @@ public class NettyClient {
                         // 下列都是inbound，处理顺序和addLast顺序一致
 //                        channel.pipeline().addLast(new AutoLoginHandler()); // 连接建立后客户端自动发送登录请求
                         channel.pipeline().addLast(new PacketDecoder()); // 收到消息，统一需要对packet解码成obj对象
+                        channel.pipeline().addLast(new CreateGroupResponseHandler()); // 收到消息，统一需要对packet解码成obj对象
                         channel.pipeline().addLast(new LoginResponseHandler());
                         channel.pipeline().addLast(new MessageResponseHandler());
                         channel.pipeline().addLast(new PacketEncoder()); // 发送消息，统一需要对packet编码
@@ -78,16 +79,36 @@ public class NettyClient {
                     channel.writeAndFlush(loginRequestPacket);
                     waitForLoginResponse();
                 } else {
-                    System.out.println("输入toUserId：");
-                    String toUserId = sc.nextLine();
-                    System.out.println("输入msg：");
-                    String msg = sc.nextLine();
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket(toUserId, msg);
-                    channel.writeAndFlush(messageRequestPacket);
+                    System.out.println("指令列表：【sendToUser】:1, 【logout】: 2, 【createGroup】: 3" + "选择你需要的指令：");
+                    Integer commandIndex = Integer.valueOf(sc.nextLine());
+
+                    String command ;
+                    switch (commandIndex) {
+                        case 1:
+                            command = "sendToUser";
+                            break;
+                        case 2:
+                            command = "logout";
+                            break;
+                        case 3:
+                            command = "createGroup";
+                            break;
+                        default:
+                            System.out.println("commandIndex un valid, specific 1");
+                            command = "sendToUser";
+                    }
+                    ConsoleCommand consoleCommand;
+                    try {
+                        consoleCommand = ConsoleCommandManager.getConsoleCommand(command);
+                        consoleCommand.execute(sc, channel);
+                    } catch (CommandNotFindException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
     }
+
 
     private static void waitForLoginResponse() {
         try {

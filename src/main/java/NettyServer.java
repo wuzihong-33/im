@@ -29,6 +29,7 @@ public class NettyServer {
                         // 下列都是inbound，处理顺序和addLast顺序一致
                         channel.pipeline().addLast(new PacketDecoder());
                         channel.pipeline().addLast(new LoginRequestHandler());
+                        channel.pipeline().addLast(new CreateGroupRequestHandler());
 //                        channel.pipeline().addLast(new AuthHandler());
                         channel.pipeline().addLast(new MessageRequestHandler());
                         channel.pipeline().addLast(new PacketEncoder());
