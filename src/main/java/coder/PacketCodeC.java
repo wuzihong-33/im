@@ -6,9 +6,11 @@ import io.netty.buffer.ByteBufAllocator;
 import marks.Command;
 import protocol.*;
 
+
 /**
- * 老版本
- * encoder和decoder一体，未继承ByteToMessageDecoder和MessageToByteEncoder
+ * 封装成协议
+ * 魔数 - 版本号 - 序列化方式 - 指令 - 长度 - 内容
+ * 协议就是ByteBuf容器；而具体的内容是Object实例，在写入到容器前需要对object实例进行序列化
  */
 public class PacketCodeC {
     public static PacketCodeC INSTANCE = new PacketCodeC();
@@ -43,6 +45,7 @@ public class PacketCodeC {
         byteBuf.writeInt(bytes.length);
         byteBuf.writeBytes(bytes);
     }
+
     public Packet decode(ByteBuf byteBuf) {
         // 跳过魔数
         byteBuf.skipBytes(4);
@@ -62,8 +65,8 @@ public class PacketCodeC {
         if (packetType == null || serializer == null) {
             return null;
         }
+        // 疑惑：这里是返回Object还是具体的packet？
         return serializer.deserialize(packetType, bytes);
-
     }
 
     private Class<? extends Packet> getRequestType(byte command) {
@@ -78,10 +81,8 @@ public class PacketCodeC {
         }
         return LoginRequestPacket.class;
     }
+
     private Serializer getSerializerAlgorithm(byte serializerAlgorithm) {
-//        if (command == protocol.marks.Command.LOGIN_REQUEST) {
-//            return protocol.protocol.LoginRequestPacket.class;
-//        }
         return Serializer.DEFAULT;
     }
 }

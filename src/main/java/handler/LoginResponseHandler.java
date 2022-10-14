@@ -8,6 +8,7 @@ import protocol.LoginResponsePacket;
 import protocol.Packet;
 import utils.LoginUtils;
 
+// 它是怎么知道obj类型是LoginResponsePacket的？
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
     /**
      * 可以看到新老版本的比较

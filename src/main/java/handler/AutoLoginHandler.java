@@ -11,15 +11,15 @@ import java.util.UUID;
 
 // 连接一旦建立，就自动进行登录请求
 public class AutoLoginHandler extends ChannelInboundHandlerAdapter {
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        // 连接建立后开始登录
-        System.out.println("client try login");
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket(UUID.randomUUID().toString(), "flash", "pwd");
-
-        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(loginRequestPacket);
-        ctx.channel().writeAndFlush(byteBuf);
-    }
+//    @Override
+//    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+//        // 连接建立后开始登录
+//        System.out.println("client try login");
+//        LoginRequestPacket loginRequestPacket = new LoginRequestPacket(UUID.randomUUID().toString(), "flash", "pwd");
+//
+//        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(loginRequestPacket);
+//        ctx.channel().writeAndFlush(byteBuf);
+//    }
 
 //    @Override
 //    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

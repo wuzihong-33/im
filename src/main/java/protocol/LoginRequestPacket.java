@@ -3,12 +3,10 @@ package protocol;
 import marks.Command;
 
 public class LoginRequestPacket extends Packet {
-    private final String userId;
-    private final String userName;
-    private final String passWord;
+    private String userName;
+    private String passWord;
 
-    public LoginRequestPacket(String userId, String userName, String passWord) {
-        this.userId = userId;
+    public LoginRequestPacket(String userName, String passWord) {
         this.userName = userName;
         this.passWord = passWord;
     }
@@ -16,10 +14,6 @@ public class LoginRequestPacket extends Packet {
     @Override
     public Byte getCommand() {
         return Command.LOGIN_REQUEST;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getUserName() {

@@ -25,12 +25,11 @@ public class NettyServer {
 //                        channel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
 //                        channel.pipeline().addLast(new Spliter(Integer.MAX_VALUE, 7, 4));
 //                        channel.pipeline().addLast(new EchoHandler());
-//                        channel.pipeline().addLast(new handler.FirstServerHandler());
 //                        channel.pipeline().addLast(new ServerHandler());
                         // 下列都是inbound，处理顺序和addLast顺序一致
                         channel.pipeline().addLast(new PacketDecoder());
                         channel.pipeline().addLast(new LoginRequestHandler());
-                        channel.pipeline().addLast(new AuthHandler());
+//                        channel.pipeline().addLast(new AuthHandler());
                         channel.pipeline().addLast(new MessageRequestHandler());
                         channel.pipeline().addLast(new PacketEncoder());
                     }

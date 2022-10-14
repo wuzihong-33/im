@@ -1,3 +1,4 @@
+import Constants.User;
 import coder.PacketCodeC;
 import coder.PacketDecoder;
 import coder.PacketEncoder;
@@ -9,10 +10,12 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import protocol.LoginRequestPacket;
 import protocol.MessageRequestPacket;
 import utils.LoginUtils;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -28,43 +31,22 @@ public class NettyClient {
                     @Override
                     protected void initChannel(NioSocketChannel channel) throws Exception {
 //                        channel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
-//                        channel.pipeline().addLast(new StickOrHalfPackageHandler());
-//                        channel.pipeline().addLast(new handler.FirstClientHandler());
-                        channel.pipeline().addLast(new AutoLoginHandler());
+//                        channel.pipeline().addLast(new StickOrHalfPackageHandler()); // 粘包半包演示
                         // 下列都是inbound，处理顺序和addLast顺序一致
-                        channel.pipeline().addLast(new PacketDecoder());
+//                        channel.pipeline().addLast(new AutoLoginHandler()); // 连接建立后客户端自动发送登录请求
+                        channel.pipeline().addLast(new PacketDecoder()); // 收到消息，统一需要对packet解码成obj对象
                         channel.pipeline().addLast(new LoginResponseHandler());
                         channel.pipeline().addLast(new MessageResponseHandler());
-                        channel.pipeline().addLast(new PacketEncoder());
+                        channel.pipeline().addLast(new PacketEncoder()); // 发送消息，统一需要对packet编码
                     }
                 });
         connect(bootstrap, "localhost", 8080, MAX_RETRY);
     }
 
-    private static void startConsoleThread(Channel channel) {
-        new Thread(() -> {
-            while (!Thread.interrupted()) {
-                // 在控制台线程中，判断只要当前Channel是登录状态，就允许控制台输入消息。
-                if (LoginUtils.hasLogin(channel)) {
-                    System.out.println("输入消息发送服务端：");
-                    Scanner sc = new Scanner(System.in);
-                    String msg = sc.nextLine();
-
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket(msg);
-
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(messageRequestPacket);
-                    channel.writeAndFlush(byteBuf);
-//                    Thread.interrupted();
-                }
-            }
-        }).start();
-    }
-
-    // client在绑定完handler后，会去执行connect，连接成功后会去
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap
                 .connect(host, port)
-                .addListener(future -> {
+                .addListener(future -> { // 疑惑：这里的监听器和channelActive，谁先被调用？  答案：这里的回调监听优先调用，然后才是channelActive
                     if (future.isSuccess()) {
                         System.out.println("client connect server success！");
                         Channel channel = ((ChannelFuture)future).channel();
@@ -80,6 +62,42 @@ public class NettyClient {
                     }
                 });
     }
+
+    private static void startConsoleThread(Channel channel) {
+        Scanner sc = new Scanner(System.in);
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                // 在控制台线程中，判断只要当前Channel是登录状态，就允许控制台输入消息。
+                if (!LoginUtils.hasLogin(channel)) {
+                    System.out.println("请输入用户名登录：");
+                    String userName = sc.nextLine();
+//                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket(msg);
+//                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(messageRequestPacket);
+//                    channel.writeAndFlush(byteBuf);
+                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket(userName, "pwd");
+                    channel.writeAndFlush(loginRequestPacket);
+                    waitForLoginResponse();
+                } else {
+                    System.out.println("输入toUserId：");
+                    String toUserId = sc.nextLine();
+                    System.out.println("输入msg：");
+                    String msg = sc.nextLine();
+                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket(toUserId, msg);
+                    channel.writeAndFlush(messageRequestPacket);
+                }
+            }
+        }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 
