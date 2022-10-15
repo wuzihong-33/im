@@ -82,6 +82,10 @@ public class PacketCodeC {
             return CreateGroupRequestPacket.class;
         } else if (command == Command.CREATE_GROUP_RESPONSE) {
             return CreateGroupResponsePacket.class;
+        } else if (command == Command.JOIN_GROUP_REQUEST) {
+            return JoinGroupRequestPacket.class;
+        } else if (command == Command.JOIN_GROUP_RESPONSE) {
+            return JoinGroupResponsePacket.class;
         }
         return LoginRequestPacket.class;
     }

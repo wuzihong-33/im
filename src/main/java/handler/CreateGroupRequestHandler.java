@@ -33,6 +33,7 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
                 userNameList.add(SessionUtils.getSession(channel).getUserName());
             }
         }
+        SessionUtils.recordChannelGroup(IDUtils.getId(), channelGroup);
         // 创建群聊结果
         CreateGroupResponsePacket createGroupResponsePacket = new CreateGroupResponsePacket();
         createGroupResponsePacket.setGroupId(IDUtils.getId());

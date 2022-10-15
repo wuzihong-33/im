@@ -36,6 +36,7 @@ public class NettyClient {
 //                        channel.pipeline().addLast(new AutoLoginHandler()); // 连接建立后客户端自动发送登录请求
                         channel.pipeline().addLast(new PacketDecoder()); // 收到消息，统一需要对packet解码成obj对象
                         channel.pipeline().addLast(new CreateGroupResponseHandler()); // 收到消息，统一需要对packet解码成obj对象
+                        channel.pipeline().addLast(new JoinGroupResponsePacketHandler()); // 收到消息，统一需要对packet解码成obj对象
                         channel.pipeline().addLast(new LoginResponseHandler());
                         channel.pipeline().addLast(new MessageResponseHandler());
                         channel.pipeline().addLast(new PacketEncoder()); // 发送消息，统一需要对packet编码
@@ -79,7 +80,7 @@ public class NettyClient {
                     channel.writeAndFlush(loginRequestPacket);
                     waitForLoginResponse();
                 } else {
-                    System.out.println("指令列表：【sendToUser】:1, 【logout】: 2, 【createGroup】: 3" + "选择你需要的指令：");
+                    System.out.println("指令列表：【sendToUser】:1, 【logout】: 2, 【createGroup】: 3, 【joinGroup】: 4" + "选择你需要的指令：");
                     Integer commandIndex = Integer.valueOf(sc.nextLine());
 
                     String command ;
@@ -92,6 +93,9 @@ public class NettyClient {
                             break;
                         case 3:
                             command = "createGroup";
+                            break;
+                        case 4:
+                            command = "joinGroup";
                             break;
                         default:
                             System.out.println("commandIndex un valid, specific 1");
