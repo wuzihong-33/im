@@ -39,6 +39,10 @@ public class NettyClient {
                         channel.pipeline().addLast(new JoinGroupResponsePacketHandler()); // 收到消息，统一需要对packet解码成obj对象
                         channel.pipeline().addLast(new LoginResponseHandler());
                         channel.pipeline().addLast(new MessageResponseHandler());
+
+                        channel.pipeline().addLast(new QuitGroupResponsePacketHandler());
+                        channel.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        channel.pipeline().addLast(new GroupMessageResponseHandler());
                         channel.pipeline().addLast(new PacketEncoder()); // 发送消息，统一需要对packet编码
                     }
                 });
@@ -80,27 +84,11 @@ public class NettyClient {
                     channel.writeAndFlush(loginRequestPacket);
                     waitForLoginResponse();
                 } else {
-                    System.out.println("指令列表：【sendToUser】:1, 【logout】: 2, 【createGroup】: 3, 【joinGroup】: 4" + "选择你需要的指令：");
+                    System.out.println("指令列表：【sendToUser】:1, 【logout】: 2, 【createGroup】: 3, 【joinGroup】: 4, 【quitGroup】: 5, 【listGroupMembers】: 6" + "选择你需要的指令：");
                     Integer commandIndex = Integer.valueOf(sc.nextLine());
 
-                    String command ;
-                    switch (commandIndex) {
-                        case 1:
-                            command = "sendToUser";
-                            break;
-                        case 2:
-                            command = "logout";
-                            break;
-                        case 3:
-                            command = "createGroup";
-                            break;
-                        case 4:
-                            command = "joinGroup";
-                            break;
-                        default:
-                            System.out.println("commandIndex un valid, specific 1");
-                            command = "sendToUser";
-                    }
+                    String command = getCommand(commandIndex);
+
                     ConsoleCommand consoleCommand;
                     try {
                         consoleCommand = ConsoleCommandManager.getConsoleCommand(command);
@@ -122,6 +110,37 @@ public class NettyClient {
         }
     }
 
+    private static String getCommand(int commandIndex) {
+        String command;
+        switch (commandIndex) {
+            case 1:
+                command = "sendToUser";
+                break;
+            case 2:
+                command = "logout";
+                break;
+            case 3:
+                command = "createGroup";
+                break;
+            case 4:
+                command = "joinGroup";
+                break;
+            case 5:
+                command = "quitGroup";
+                break;
+            case 6:
+                command = "listGroupMembers";
+                break;
+            case 7:
+                command = "groupMessage";
+                break;
+            default:
+                System.out.println("commandIndex un valid, specific 1");
+                command = "sendToUser";
+
+        }
+        return command;
+    }
 
 
 

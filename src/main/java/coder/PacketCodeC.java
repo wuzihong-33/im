@@ -1,6 +1,7 @@
 package coder;
 
 import Serializer.Serializer;
+import entity.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import marks.Command;
@@ -86,6 +87,18 @@ public class PacketCodeC {
             return JoinGroupRequestPacket.class;
         } else if (command == Command.JOIN_GROUP_RESPONSE) {
             return JoinGroupResponsePacket.class;
+        } else if (command == Command.QUIT_GROUP_REQUEST) {
+            return QuitGroupRequestPacket.class;
+        } else if (command == Command.QUIT_GROUP_RESPONSE) {
+            return QuitGroupResponsePacket.class;
+        } else if (command == Command.LIST_GROUP_MEMBERS_REQUEST) {
+            return ListGroupMembersRequestPacket.class;
+        } else if (command == Command.LIST_GROUP_MEMBERS_RESPONSE) {
+            return ListGroupMembersResponsePacket.class;
+        } else if (command == Command.GROUP_MESSAGE_REQUEST) {
+            return GroupMessageRequestPacket.class;
+        } else if (command == Command.GROUP_MESSAGE_RESPONSE) {
+            return GroupMessageResponsePacket.class;
         }
         return LoginRequestPacket.class;
     }

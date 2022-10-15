@@ -2,9 +2,10 @@ package entity;
 
 import protocol.Packet;
 
-public class ListGroupMembersRequestPacket extends Packet {
+public class GroupMessageRequestPacket extends Packet {
     private String groupId;
-    private Session session;
+    private String msg;
+
 
     public String getGroupId() {
         return groupId;
@@ -14,12 +15,12 @@ public class ListGroupMembersRequestPacket extends Packet {
         this.groupId = groupId;
     }
 
-    public Session getSession() {
-        return session;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setSession(Session session) {
-        this.session = session;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     @Override

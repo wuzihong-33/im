@@ -18,13 +18,10 @@ public class JoinGroupRequestPacketHandler extends SimpleChannelInboundHandler<J
             // 构建响应
             joinGroupResponsePacket.setSuccess(true);
             joinGroupResponsePacket.setGroupId(groupId);
-            ctx.writeAndFlush(joinGroupResponsePacket);
         } else {
             joinGroupResponsePacket.setSuccess(false);
             joinGroupResponsePacket.setReason("group不存在，请输入正确的group");
-
         }
-
-
+        ctx.channel().writeAndFlush(joinGroupResponsePacket);
     }
 }

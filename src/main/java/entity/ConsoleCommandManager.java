@@ -17,6 +17,12 @@ public class ConsoleCommandManager {
         consoleCommandMap.put("logout", new LogoutConsoleCommand());
         consoleCommandMap.put("createGroup", new CreateGroupConsoleCommand());
         consoleCommandMap.put("joinGroup", new JoinGroupConsoleCommand());
+
+        consoleCommandMap.put("quitGroup", new QuitGroupConsoleCommand());
+        consoleCommandMap.put("groupMessage", new GroupMessageConsoleCommand());
+        consoleCommandMap.put("listGroupMembers", new ListGroupMembersConsoleCommand());
+
+
     }
 
     public ConsoleCommandManager() {
